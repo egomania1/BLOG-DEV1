@@ -1,9 +1,11 @@
 <?php
-  $host     = getenv('MYSQLHOST')     ?: 'localhost';
-  $dbname   = getenv('MYSQLDATABASE') ?: 'blog_mvc';
-  $username = getenv('MYSQLUSER')     ?: 'root';
-  $password = getenv('MYSQLPASSWORD') ?: '';
-  $port     = getenv('MYSQLPORT')     ?: '3306';
+  // Clever Cloud injecte MYSQL_ADDON_* quand l'add-on MySQL est lié à l'app ;
+  // MYSQL* reste pour Railway, puis les valeurs XAMPP en local.
+  $host     = getenv('MYSQL_ADDON_HOST')     ?: getenv('MYSQLHOST')     ?: 'localhost';
+  $dbname   = getenv('MYSQL_ADDON_DB')       ?: getenv('MYSQLDATABASE') ?: 'blog_mvc';
+  $username = getenv('MYSQL_ADDON_USER')     ?: getenv('MYSQLUSER')     ?: 'root';
+  $password = getenv('MYSQL_ADDON_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: '';
+  $port     = getenv('MYSQL_ADDON_PORT')     ?: getenv('MYSQLPORT')     ?: '3306';
 
   try {
       $pdo = new PDO(
