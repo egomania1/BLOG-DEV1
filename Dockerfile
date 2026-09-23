@@ -9,11 +9,16 @@ FROM php:8.2-apache
 
   RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
 
+  # Clever Cloud route le trafic vers le port 8080 du conteneur, pas le 80
+  # par défaut d'Apache — on déplace l'écoute pour que son health check passe.
+  RUN sed -i 's/80/8080/' /etc/apache2/ports.conf \
+      && sed -i 's/:80>/:8080>/' /etc/apache2/sites-enabled/000-default.conf
+
   COPY . /var/www/html/
 
   RUN mkdir -p /var/www/html/uploads/avatars \
       && chown -R www-data:www-data /var/www/html/uploads \
       && chmod -R 775 /var/www/html/uploads
 
-  EXPOSE 80
+  EXPOSE 8080
   CMD ["apache2-foreground"]
